@@ -1,4 +1,4 @@
-![attargah-admin-bar.jpg](art/attargah-admin-bar.jpg)
+![attargah-admin-bar.jpg](art/attargah-anti-scam.jpg)
 
 # Anti-Scam Laravel Package
 
