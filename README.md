@@ -31,10 +31,14 @@ You can install the package via Composer:
 composer require attargah/anti-scam
 ```
 
-### Publish Configuration and Migrations
+### Publish Configuration, Migrations and Translations
 
 ```bash
-php artisan vendor:publish --provider="Attargah\AntiScam\AntiScamServiceProvider"
+php artisan vendor:publish anti-scam-config   
+
+php artisan vendor:publish anti-scam-migrations
+
+php artisan vendor:publish anti-scam-translations
 ```
 
 ### Run Migrations
@@ -113,7 +117,7 @@ Add the middleware to your routes or controllers:
 ```php
 // In your routes file
 Route::post('/contact', [ContactController::class, 'store'])
-    ->middleware(['AntiScam', 'AntiSpam', 'XSSProtection']);
+    ->middleware(['anti-scam', 'anti-spam', 'xss']);
 
 // and in your bootstrap/app.php
 return Application::configure(basePath: dirname(__DIR__))
