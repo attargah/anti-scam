@@ -1,0 +1,52 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+            Schema::create('scam_ips', function (Blueprint $table) {
+                        $table->id();
+                        $table->string('ip_address', 45)->index()->unique();
+                        $table->text('form_identity')->nullable();
+                        $table->text('user_agent')->nullable();
+                        $table->string('request_url', 200)->nullable();
+                        $table->string('request_path', 100)->nullable();
+                        $table->string('request_method', 20)->nullable();
+                        $table->timestamps();
+                    });
+
+            Schema::create('blocked_ips', function (Blueprint $table) {
+                $table->id();
+                $table->string('ip_address', 45)->index()->unique();
+                $table->timestamp('expires_at')->nullable();
+                $table->timestamps();
+            });
+
+           Schema::create('blocked_ip_logs', function (Blueprint $table) {
+               $table->id();
+               $table->string('ip_address', 45)->index();
+               $table->text('reason')->nullable();
+               $table->text('expires_time')->nullable();
+               $table->timestamp('expires_at')->nullable();
+               $table->text('form_identity')->nullable();
+               $table->text('user_agent')->nullable();
+               $table->string('request_url', 200)->nullable();
+               $table->string('request_path', 100)->nullable();
+               $table->string('request_method', 20)->nullable();
+               $table->foreignId('blocked_by')->nullable()->constrained('users')->nullOnDelete();
+               $table->foreignId('blocked_ip_id')->nullable()->constrained('blocked_ips')->nullOnDelete();
+               $table->timestamps();
+           });
+    }
+
+      public function down()
+        {
+            Schema::dropIfExists('blocked_ips');
+            Schema::dropIfExists('blocked_ip_logs');
+            Schema::dropIfExists('scam_ips');
+        }
+};

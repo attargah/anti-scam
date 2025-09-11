@@ -1,86 +1,222 @@
-# :package_description
+![attargah-admin-bar.jpg](art/attargah-admin-bar.jpg)
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
+# Anti-Scam Laravel Package
 
-<!--delete-->
----
-This repo can be used to scaffold a Filament plugin. Follow these steps to get started:
+A comprehensive Laravel package that provides advanced protection against spam, scam bots, and malicious activities on your web forms. This package integrates seamlessly with Filament admin panel for easy management and monitoring.
 
-1. Press the "Use this template" button at the top of this repo to create a new repo with the contents of this skeleton.
-2. Run "php ./configure.php" to run a script that will replace all placeholders throughout all the files.
-3. Make something great!
----
-<!--/delete-->
+## Features
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+### 🛡️ Multi-Layer Protection
+- **Anti-Scam Protection**: Detects and blocks scam bots using hidden form fields
+- **Anti-Spam Protection**: Rate limiting with progressive ban duration
+- **IP Blocking**: Temporary and permanent IP blocking system
+- **XSS Protection**: Automatic input sanitization
+
+### 📊 Admin Panel Integration
+- **Filament Resources**: Manage blocked IPs, scam IPs, and logs
+- **Real-time Monitoring**: Track blocked attempts and scam activities
+- **Log Management**: Detailed logging with user agent, request details, and timestamps
+
+### 🎯 Advanced Bot Detection
+- **Hidden Form Fields**: Invisible honeypot fields to catch bots
+- **Hash-based Validation**: Secure validation using Laravel's Hash facade
+- **Randomized Input Order**: Prevents pattern-based bot detection
+- **Configurable Display**: Hide fields using CSS or move them off-screen
 
 ## Installation
 
-You can install the package via composer:
+You can install the package via Composer:
 
 ```bash
-composer require :vendor_slug/:package_slug
+composer require attargah/anti-scam
 ```
 
-You can publish and run the migrations with:
+### Publish Configuration and Migrations
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
+php artisan vendor:publish --provider="Attargah\AntiScam\AntiScamServiceProvider"
+```
+
+### Run Migrations
+
+```bash
 php artisan migrate
 ```
 
-You can publish the config file with:
+### Configure the Package
 
-```bash
-php artisan vendor:publish --tag=":package_slug-config"
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag=":package_slug-views"
-```
-
-This is the contents of the published config file:
+Set your secret key in the `config/anti-scam.php` file:
 
 ```php
-return [
-];
+'key' => env('ANTI_SCAM_KEY', 'your-secret-key-here'),
+```
+
+## Configuration
+
+The package provides extensive configuration options in `config/anti-scam.php`:
+
+### Anti-Scam Configuration
+
+```php
+'scam' => [
+    'active' => true,                    // Enable/disable scam protection
+    'ban' => false,                      // Permanently ban scam IPs (not recommended)
+    'save_log' => true,                  // Save scam attempts to database
+    'register_logs_to_panel' => true,    // Show logs in admin panel
+    'order_random' => true,              // Randomize input field order
+    'display' => [
+        'active' => false,               // Hide fields with CSS
+        'css' => 'display:none!important',
+    ],
+    'off_screen' => [
+        'active' => true,                // Move fields off-screen
+        'css' => 'position:absolute!important; left:-9999px!important; z-index:-9999!important;',
+    ],
+],
+```
+
+### Anti-Spam Configuration
+
+```php
+'spam' => [
+    'active' => true,                    // Enable/disable spam protection
+    'max_requests_per_window' => 5,      // Max requests per time window
+    'window_in_seconds' => 60,           // Time window length
+    'ban_duration_multiplier' => 3,      // Progressive ban duration multiplier
+    'permanent_ban_threshold_min' => 10080, // Permanent ban threshold (7 days)
+],
 ```
 
 ## Usage
 
-```php
-$variable = new VendorName\Skeleton();
-echo $variable->echoPhrase('Hello, VendorName!');
+### 1. Protect Your Forms
+
+Use the `@protect` Blade directive in your forms:
+
+```blade
+<form method="POST" action="/contact">
+    @csrf
+    @protect('contact-form')
+    
+    <input type="text" name="cf_name" placeholder="Your Name" required>
+    <input type="email" name="cf_email" placeholder="Your Email" required>
+    <textarea name=cf_"message" placeholder="Your Message" required></textarea>
+    
+    <button type="submit">Send Message</button>
+</form>
 ```
+
+### 2. Apply Middleware
+
+Add the middleware to your routes or controllers:
+
+```php
+// In your routes file
+Route::post('/contact', [ContactController::class, 'store'])
+    ->middleware(['anti-scam', 'anti-spam', 'xss-protection']);
+
+// and in your bootstrap/app.php
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(\Attargah\AntiScam\Http\Middleware\CheckBlockedIP::class);
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+        //
+    })->create();
+
+```
+You can also prevent XSS attacks using Validation.
+```php
+$request->validate([
+    'q' => ['required', new Xss],
+]);
+
+```
+
+### 3. Filament Admin Panel
+
+Register the plugin in your Filament panel:
+
+```php
+use Attargah\AntiScam\AntiScamPlugin;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ->plugins([
+            AntiScamPlugin::make(),
+        ]);
+}
+```
+
+## Middleware Components
+
+### AntiScam Middleware
+- Detects scam bots using hidden form fields
+- Validates hash-based tokens
+- Logs scam attempts and optionally bans IPs
+
+### AntiSpam Middleware
+- Implements rate limiting with configurable thresholds
+- Progressive ban duration (increases with repeated violations)
+- Automatic permanent bans for persistent offenders
+
+### CheckBlockedIP Middleware
+- Blocks requests from banned IP addresses
+- Supports both temporary and permanent bans
+- Returns 403 status for blocked requests
+
+### XSSProtection Middleware
+- Sanitizes all input data
+- Removes HTML tags and scripts
+- Prevents XSS attacks
+
+## Database Tables
+
+The package creates three main tables:
+
+- **`scam_ips`**: Stores detected scam IP addresses and related information
+- **`blocked_ips`**: Manages IP blocking with expiration times
+- **`blocked_ip_logs`**: Detailed logs of all blocking activities
 
 ## Testing
 
+Run the test suite:
+
 ```bash
-composer test
+vendor/bin/pest .\vendor\attargah\anti-scam\tests
 ```
+
+The package includes comprehensive tests for all middleware components and functionality.
+
+## Security Considerations
+
+1. **Secret Key**: Always use a strong, unique secret key for the anti-scam protection
+2. **Rate Limiting**: Adjust spam protection settings based on your traffic patterns
+3. **IP Blocking**: Be cautious with permanent IP bans as they may affect legitimate users
+4. **Logging**: Regularly review logs to identify patterns and adjust protection levels
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This package is open-sourced software licensed under the [MIT license](LICENSE.md).
+
+## Support
+
+If you encounter any issues or have questions, please open an issue on [GitHub](https://github.com/attargah/anti-scam/issues).
 
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
-## Contributing
+---
 
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
-## Credits
-
-- [:author_name](https://github.com/:author_username)
-- [All Contributors](../../contributors)
-
-## License
-
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+**Made with ❤️ by [Attargah](https://github.com/attargah)**
