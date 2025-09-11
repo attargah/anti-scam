@@ -141,6 +141,19 @@ $request->validate([
 ]);
 
 ```
+> 💡 **Bot Deception / Honeypot Success Message:**  
+> To trick scam bots into thinking their request was successful, you can place the following snippet **before saving any data** in your controller:
+>
+> ```php
+> if ($request->input('scam_status_'.config('key'))){
+>     return back()->with('success', 'your_message'); // or any success return of your choice
+> }
+> ```
+> This ensures that:
+> - Legitimate users are not affected (since they won't trigger the hidden field).  
+> - Bots see a success message and believe their request went through.  
+> - No actual data is saved for requests flagged as scam.
+
 
 ### 3. Filament Admin Panel
 
