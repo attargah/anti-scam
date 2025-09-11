@@ -31,6 +31,6 @@ return [
     'created_at' => 'Oluşturulma Tarihi',
     'manual_add_reason' => 'Filament Kaynağından Manuel Eklendi',
     'form_identity_not_found' => 'Form Kimliği Bulunamadı',
-    'scam_reason' => 'Neden',
+    'scam_reason' => 'Dolandırıcılık Şüphesi',
     'max_request_exceeded' => 'Maksimum istek sayısı (:count) aşıldı',
 ];
