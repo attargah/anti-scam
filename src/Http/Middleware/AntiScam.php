@@ -27,19 +27,20 @@ class AntiScam
             if (empty($key)) {
                 throw new  EmptyKeyException();
             }
-
+            $isRandom = config('anti-scam.scam.order_random',false);
             $inputs = config('anti-scam.scam.inputs');
-
+            $inputs = $request->only(array_column($inputs,'name'));
             $isCheck = false;
             $isScam = false;
-            foreach ($inputs as $x => $input) {
-                $input = $request->input($input['name']);
+            $x = count($inputs) -1;
+            foreach ($inputs as $name => $input) {
                 if (!empty($input)) {
                     if ($isCheck) {
+
                         $isScam = true;
                         break;
                     }
-                    $text = $key . ',' . $x . ',' . $inputs[$x]['name'];
+                    $text = $key . ',' . $x . ',' . $name;
                     if (Hash::check($text, $input)) {
                         $isCheck = true;
                     } else {
@@ -47,8 +48,10 @@ class AntiScam
                         break;
                     }
                 }
+                $x--;
             }
             if ($isScam){
+                
                 $ip = $request->ip();
                 if (config('anti-scam.scam.ban',false)) {
                     BlockedIpLog::query()->create([
