@@ -19,8 +19,10 @@ class ScamIp extends Model
         'request_url',
         'request_path',
         'request_method',
-        'expires_at',
+    
     ];
+
+    
 
 
 }
