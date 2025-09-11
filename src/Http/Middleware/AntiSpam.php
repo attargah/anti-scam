@@ -55,10 +55,7 @@ class AntiSpam
                     'request_method' => request()->method(),
                 ]);
 
-                BlockedIp::query()->create([
-                    'ip_address' => $ip,
-                    'expires_at' => $expiresAt,
-                ]);
+              BlockedIp::updateOrCreate(['ip_address' => $ip],['expires_at' => $expiresAt]);
 
                 Cache::forget($key);
                 abort(403);
