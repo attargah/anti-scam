@@ -14,6 +14,7 @@ class ScamIp extends Model
     protected $fillable = [
         'ip_address',
         'form_identity',
+        'reason',
         'user_agent',
         'request_url',
         'request_path',
