@@ -13,6 +13,7 @@ return new class extends Migration
                         $table->string('ip_address', 45)->index()->unique();
                         $table->text('form_identity')->nullable();
                         $table->text('user_agent')->nullable();
+                        $table->text('reason')->nullable();
                         $table->string('request_url', 200)->nullable();
                         $table->string('request_path', 100)->nullable();
                         $table->string('request_method', 20)->nullable();
