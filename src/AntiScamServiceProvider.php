@@ -56,6 +56,11 @@ class AntiScamServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
+        $router = $this->app['router'];
+        $router->aliasMiddleware('anti-scam', \Attargah\AntiScam\Http\Middleware\AntiScam::class);
+        $router->aliasMiddleware('anti-spam', \Attargah\AntiScam\Http\Middleware\AntiSpam::class);
+        $router->aliasMiddleware('xss', \Attargah\AntiScam\Http\Middleware\XSSProtection::class);
+        $router->aliasMiddleware('check-blocked-ip', \Attargah\AntiScam\Http\Middleware\CheckBlockedIP::class);
 
         Blade::directive('protect', function ($expression) {
             $view = 'anti-scam::directives.protect';
@@ -65,17 +70,6 @@ class AntiScamServiceProvider extends PackageServiceProvider
 
             return "<?php echo view('{$view}', ['identity' => {$expression}])->render(); ?>";
         });
-
-        // Handle Stubs
-        if (app()->runningInConsole()) {
-            foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
-                $this->publishes([
-                    $file->getRealPath() => base_path("stubs/anti-scam/{$file->getFilename()}"),
-                ], 'anti-scam-stubs');
-            }
-        }
-
-
 
 
     }
