@@ -16,23 +16,24 @@ class BlockedIp extends Model
         'expires_at'
     ];
 
-    public static function findActiveByIp(?string $ip = null): ?self
+    protected $casts = [
+        'ip_address' => 'string',
+        'expires_at' => 'datetime',
+    ];
+
+    public static function findActiveByIp(?string $ip = null)
     {
         $ip = $ip ?? request()->ip();
 
         return self::query()
-            ->where('ip_address', $ip)
-            ->where(function ($q) {
-                $q->whereNull('expires_at')
-                    ->orWhere('expires_at', '>', now());
-            })
-            ->first();
+            ->where('ip_address', $ip)->first();
     }
 
 
     public static function isBlocked(?string $ip = null): bool
     {
-        return (bool) self::findActiveByIp($ip);
+        $record = self::findActiveByIp($ip);
+        return $record ? $record->isCurrentlyBlocked() : false;
     }
 
     public function logs() : HasMany
@@ -42,12 +43,12 @@ class BlockedIp extends Model
 
     public function isPermanentlyBlocked(): bool
     {
-        return is_null($this->expires_at);
+        return empty($this->expires_at);
     }
 
     public function isCurrentlyBlocked(): bool
     {
-        return $this->isPermanentlyBlocked() || $this->expires_at->isFuture();
+        return $this->isPermanentlyBlocked() or $this->expires_at->isFuture();
     }
 
     protected static function booted()
