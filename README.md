@@ -1,4 +1,4 @@
-![attargah-admin-bar.jpg](art/attargah-admin-bar.jpg)
+![attargah-admin-bar.jpg](art/attargah-anti-scam.jpg)
 
 # Anti-Scam Laravel Package
 
@@ -113,7 +113,7 @@ Add the middleware to your routes or controllers:
 ```php
 // In your routes file
 Route::post('/contact', [ContactController::class, 'store'])
-    ->middleware(['anti-scam', 'anti-spam', 'xss-protection']);
+    ->middleware(['AntiScam', 'AntiSpam', 'XSSProtection']);
 
 // and in your bootstrap/app.php
 return Application::configure(basePath: dirname(__DIR__))
