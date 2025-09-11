@@ -95,8 +95,12 @@ class ScamIpResource extends Resource
                     ->limit(30)
                     ->toggleable(),
 
+                        Tables\Columns\TextColumn::make('reason')
+                    ->label(__('anti-scam::anti-scam.reason'))
+                    ->toggleable(),
+
                 Tables\Columns\TextColumn::make('request_method')
-                    ->label(__('anti-scam::anti-scam.request_path'))
+                    ->label(__('anti-scam::anti-scam.request_method'))
                     ->sortable()
                     ->badge(),
 
@@ -128,6 +132,9 @@ class ScamIpResource extends Resource
                         ->columnSpanFull(),
                     TextEntry::make('form_identity')
                         ->label(__('anti-scam::anti-scam.form_identity'))
+                        ->columnSpanFull(),
+                           TextEntry::make('reason')
+                        ->label(__('anti-scam::anti-scam.reason'))
                         ->columnSpanFull(),
                     TextEntry::make('user_agent')
                         ->label(__('anti-scam::anti-scam.user_agent'))
