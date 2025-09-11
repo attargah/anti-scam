@@ -23,6 +23,10 @@ class BlockedIpLog extends Model
         'blocked_ip_id'
     ];
 
+     protected $casts = [
+        'expires_at' => 'datetime',
+    ];
+
     public static function getLastExpiresTime(?string $ip)
     {
         return self::query()->where('ip_address', $ip)->orderBy('expires_time', 'desc')->first()->expires_time ?? null;
