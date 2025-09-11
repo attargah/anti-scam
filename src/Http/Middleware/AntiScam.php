@@ -61,9 +61,7 @@ class AntiScam
                         'request_method' => request()->method(),
                     ]);
 
-                    BlockedIp::query()->create([
-                        'ip_address' => $ip,
-                    ]);
+                    BlockedIp::updateOrCreate(['ip_address' => $ip],['expires_at' => $expiresAt]);
                 }
 
                 if (config('anti-scam.scam.save_log',false)) {
