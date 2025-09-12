@@ -29,7 +29,10 @@ class AntiScam
             }
             $isRandom = config('anti-scam.scam.order_random',false);
             $inputs = config('anti-scam.scam.inputs');
-            $inputs = $request->only(array_column($inputs,'name'));
+               $inputs = collect($request->all())
+                ->filter(fn($value, $key) => in_array($key, array_column($inputs,'name')))
+                ->toArray();
+
             $isCheck = false;
             $isScam = false;
             $x = count($inputs) -1;
