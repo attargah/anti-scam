@@ -2,6 +2,10 @@
 
 All notable changes to `anti-scam` will be documented in this file.
 
+## v1.0.2 - 2025-09-12
+
+Randomize Input Bug Fix
+
 ## v1.0.1 - 2025-09-12
 
 Bug Fixing
