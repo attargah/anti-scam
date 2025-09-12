@@ -34,11 +34,11 @@ composer require attargah/anti-scam
 ### Publish Configuration, Migrations and Translations
 
 ```bash
-php artisan vendor:publish anti-scam-config   
+php artisan vendor:publish --tag="anti-scam-config"   
 
-php artisan vendor:publish anti-scam-migrations
+php artisan vendor:publish --tag="anti-scam-migrations"
 
-php artisan vendor:publish anti-scam-translations
+php artisan vendor:publish --tag="anti-scam-translations"
 ```
 
 ### Run Migrations
