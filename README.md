@@ -145,7 +145,7 @@ $request->validate([
 > To trick scam bots into thinking their request was successful, you can place the following snippet **before saving any data** in your controller:
 >
 > ```php
-> if ($request->input('scam_status_'.config('key'))){
+> if ($request->input('scam_status_'.config('anti-scam.key'))){
 >     return back()->with('success', 'your_message'); // or any success return of your choice
 > }
 > ```
