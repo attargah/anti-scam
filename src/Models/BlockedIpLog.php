@@ -2,7 +2,7 @@
 
 namespace Attargah\AntiScam\Models;
 
-use App\Models\User;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -34,7 +34,8 @@ class BlockedIpLog extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'blocked_by');
+        $userModel = config('auth.providers.users.model');
+        return $this->belongsTo($userModel, 'blocked_by');
     }
 
     public function blockedIp(): BelongsTo
