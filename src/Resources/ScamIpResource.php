@@ -5,8 +5,7 @@ namespace Attargah\AntiScam\Resources;
 use Attargah\AntiScam\Models\ScamIp;
 
 use Attargah\AntiScam\Resources\ScamIpResource\Pages\ManageScamIp;
-use Filament\Actions\DeleteAction;
-use Filament\Forms;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -14,7 +13,9 @@ use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 
@@ -31,7 +32,7 @@ class ScamIpResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-        return config('anti-scam.scam.register_logs_to_panel',false);
+        return config('anti-scam.scam.register_logs_to_panel', false);
     }
 
     public static function getNavigationGroup(): ?string
@@ -67,15 +68,15 @@ class ScamIpResource extends Resource
                     ->label(__('anti-scam::anti-scam.form_identity'))
                     ->maxLength(255),
 
-                 Textarea::make('user_agent')
+                Textarea::make('user_agent')
                     ->label(__('anti-scam::anti-scam.user_agent'))
                     ->rows(2),
 
-                 TextInput::make('request_url')
+                TextInput::make('request_url')
                     ->label(__('anti-scam::anti-scam.request_url'))
                     ->maxLength(200),
 
-                 TextInput::make('request_path')
+                TextInput::make('request_path')
                     ->label(__('anti-scam::anti-scam.request_path'))
                     ->maxLength(100),
 
@@ -89,44 +90,45 @@ class ScamIpResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('ip_address')
+                TextColumn::make('ip_address')
                     ->label(__('anti-scam::anti-scam.ip_address'))
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('form_identity')
+                TextColumn::make('form_identity')
                     ->label(__('anti-scam::anti-scam.form_identity'))
                     ->limit(30)
                     ->toggleable(),
 
-                        Tables\Columns\TextColumn::make('reason')
+                TextColumn::make('reason')
                     ->label(__('anti-scam::anti-scam.reason'))
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('request_method')
+                TextColumn::make('request_method')
                     ->label(__('anti-scam::anti-scam.request_method'))
                     ->sortable()
                     ->badge(),
 
-                Tables\Columns\TextColumn::make('request_path')
+                TextColumn::make('request_path')
                     ->label(__('anti-scam::anti-scam.request_path'))
                     ->limit(30)
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label(__('anti-scam::anti-scam.created_at'))
                     ->dateTime('Y-m-d H:i')
                     ->sortable(),
             ])
             ->filters([])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                 ViewAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make()
+                 DeleteBulkAction::make()
             ]);
     }
+
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
@@ -138,7 +140,7 @@ class ScamIpResource extends Resource
                     TextEntry::make('form_identity')
                         ->label(__('anti-scam::anti-scam.form_identity'))
                         ->columnSpanFull(),
-                           TextEntry::make('reason')
+                    TextEntry::make('reason')
                         ->label(__('anti-scam::anti-scam.reason'))
                         ->columnSpanFull(),
                     TextEntry::make('user_agent')
@@ -158,10 +160,10 @@ class ScamIpResource extends Resource
         ]);
     }
 
-        public static function getPages(): array
-        {
-            return [
-                'index' => ManageScamIp::route('/'),
-            ];
-        }
+    public static function getPages(): array
+    {
+        return [
+            'index' => ManageScamIp::route('/'),
+        ];
+    }
 }

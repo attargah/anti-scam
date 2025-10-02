@@ -5,7 +5,6 @@ namespace Attargah\AntiScam\Resources;
 use Attargah\AntiScam\Resources\BlockedIpLogResource\Pages;
 use Attargah\AntiScam\Models\BlockedIpLog;
 use Filament\Tables\Actions\DeleteAction;
-use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -15,13 +14,10 @@ use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class BlockedIpLogResource extends Resource
 {
