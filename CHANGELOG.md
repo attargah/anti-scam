@@ -2,6 +2,10 @@
 
 All notable changes to `anti-scam` will be documented in this file.
 
+## v3.0.0 - 2025-10-02
+
+Release for Filament v3
+
 ## v1.0.2 - 2025-09-12
 
 Randomize Input Bug Fix
