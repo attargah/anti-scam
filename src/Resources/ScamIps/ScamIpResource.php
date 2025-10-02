@@ -158,19 +158,6 @@ class ScamIpResource extends Resource
             ->filters([])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make()->after(function ($record) {
-                    $record->logs()->create([
-                        'ip_address'     => $record->ip_address,
-                        'expires_at'     => $record->expires_at,
-                        'form_identity' => 'Resource Form',
-                        'reason'         => __('anti-scam::anti-scam.edit_reason'),
-                        'user_agent'     => request()->userAgent(),
-                        'request_url'    => url()->full(),
-                        'request_path'   => request()->path(),
-                        'request_method' => request()->method(),
-                        'blocked_by'     => auth()->id(),
-                    ]);
-                }),
                 DeleteAction::make(),
             ])
             ->toolbarActions([
