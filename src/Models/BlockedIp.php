@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property string $ip_address
+ * @property \Illuminate\Support\Carbon|null $expires_at
+ */
 class BlockedIp extends Model
 {
     protected $table = 'blocked_ips';
@@ -46,9 +50,10 @@ class BlockedIp extends Model
         return empty($this->expires_at);
     }
 
+
     public function isCurrentlyBlocked(): bool
     {
-        return $this->isPermanentlyBlocked() or $this->expires_at->isFuture();
+        return $this->isPermanentlyBlocked() || ($this->expires_at?->isFuture() ?? false);
     }
 
     protected static function booted()
