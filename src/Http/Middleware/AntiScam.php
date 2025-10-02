@@ -54,7 +54,7 @@ class AntiScam
                 $x--;
             }
             if ($isScam){
-                
+
                 $ip = $request->ip();
                 if (config('anti-scam.scam.ban',false)) {
                     BlockedIpLog::query()->create([
@@ -67,7 +67,7 @@ class AntiScam
                         'request_method' => request()->method(),
                     ]);
 
-                    BlockedIp::updateOrCreate(['ip_address' => $ip],['expires_at' => $expiresAt]);
+                    BlockedIp::updateOrCreate(['ip_address' => $ip],['expires_at' => null]);
                 }
 
                 if (config('anti-scam.scam.save_log',false)) {

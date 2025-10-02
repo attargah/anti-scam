@@ -63,12 +63,7 @@ class AntiScamServiceProvider extends PackageServiceProvider
         $router->aliasMiddleware('check-blocked-ip', \Attargah\AntiScam\Http\Middleware\CheckBlockedIP::class);
 
         Blade::directive('protect', function ($expression) {
-            $view = 'anti-scam::directives.protect';
-            if (view()->exists('directives.protect')) {
-                $view = 'directives.protect';
-            }
-
-            return "<?php echo view('{$view}', ['identity' => {$expression}])->render(); ?>";
+            return "<?php echo view('anti-scam::directives.protect', ['identity' => {$expression}])->render(); ?>";
         });
 
 
