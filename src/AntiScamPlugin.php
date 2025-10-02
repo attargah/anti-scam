@@ -2,14 +2,11 @@
 
 namespace Attargah\AntiScam;
 
-use Attargah\AntiScam\Models\ScamIp;
-use Attargah\AntiScam\Resources\BlockedIpLogResource;
-use Attargah\AntiScam\Resources\BlockedIpResource;
-use Attargah\AntiScam\Resources\ScamIpResource;
+use Attargah\AntiScam\Resources\BlockedIpLogs\BlockedIpLogResource;
+use Attargah\AntiScam\Resources\BlockedIps\BlockedIpResource;
+use Attargah\AntiScam\Resources\ScamIps\ScamIpResource;
 use Filament\Contracts\Plugin;
-use Illuminate\Support\Facades\Blade;
 use Filament\Panel;
-use Illuminate\Support\Str;
 
 class AntiScamPlugin implements Plugin
 {
