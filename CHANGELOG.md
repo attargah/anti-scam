@@ -2,6 +2,10 @@
 
 All notable changes to `anti-scam` will be documented in this file.
 
+## v4.0.0 - 2025-10-02
+
+Release for Filament v4
+
 ## v3.0.0 - 2025-10-02
 
 Release for Filament v3
