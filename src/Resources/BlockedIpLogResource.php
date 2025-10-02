@@ -4,13 +4,21 @@ namespace Attargah\AntiScam\Resources;
 
 use Attargah\AntiScam\Resources\BlockedIpLogResource\Pages;
 use Attargah\AntiScam\Models\BlockedIpLog;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Forms;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -50,47 +58,47 @@ class BlockedIpLogResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('ip_address')
+                TextInput::make('ip_address')
                     ->label(__('anti-scam::anti-scam.ip_address'))
                     ->required()
                     ->maxLength(45),
 
-                Forms\Components\Textarea::make('reason')
+               Textarea::make('reason')
                     ->label(__('anti-scam::anti-scam.reason'))
                     ->rows(3),
 
-                Forms\Components\DateTimePicker::make('expires_at')
+                DateTimePicker::make('expires_at')
                     ->label(__('anti-scam::anti-scam.expires_at'))
                     ->nullable()
                     ->helperText(__('anti-scam::anti-scam.expires_at_helper_text')),
 
-                Forms\Components\TextInput::make('form_identity')
+                TextInput::make('form_identity')
                     ->label(__('anti-scam::anti-scam.form_identity'))
                     ->maxLength(255),
 
-                Forms\Components\Textarea::make('user_agent')
+                 Textarea::make('user_agent')
                     ->label(__('anti-scam::anti-scam.user_agent'))
                     ->rows(2),
 
-                Forms\Components\TextInput::make('request_url')
+                 TextInput::make('request_url')
                     ->label(__('anti-scam::anti-scam.request_url'))
                     ->maxLength(200),
 
-                Forms\Components\TextInput::make('request_path')
+                TextInput::make('request_path')
                     ->label(__('anti-scam::anti-scam.request_path'))
                     ->maxLength(100),
 
-                Forms\Components\TextInput::make('request_method')
+                TextInput::make('request_method')
                     ->label(__('anti-scam::anti-scam.request_method'))
                     ->maxLength(20),
 
-                Forms\Components\Select::make('blocked_by')
+                Select::make('blocked_by')
                     ->label(__('anti-scam::anti-scam.blocked_by'))
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload(),
 
-                Forms\Components\Select::make('blocked_ip_id')
+                Select::make('blocked_ip_id')
                     ->label('Parent Blocked IP')
                     ->relationship('parent', 'ip_address')
                     ->searchable()
@@ -102,52 +110,53 @@ class BlockedIpLogResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('ip_address')
+                 TextColumn::make('ip_address')
                     ->label(__('anti-scam::anti-scam.ip_address'))
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('reason')
+                TextColumn::make('reason')
                     ->label(__('anti-scam::anti-scam.reason'))
                     ->limit(40)
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('expires_at')
+                TextColumn::make('expires_at')
                     ->label(__('anti-scam::anti-scam.expires_at'))
                     ->default('Permanent')
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('form_identity')
+                TextColumn::make('form_identity')
                     ->label(__('anti-scam::anti-scam.form_identity'))
                     ->limit(30)
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('request_method')
+                TextColumn::make('request_method')
                     ->label(__('anti-scam::anti-scam.request_method'))
                     ->sortable()
                     ->badge(),
 
-                Tables\Columns\TextColumn::make('request_path')
+                TextColumn::make('request_path')
                     ->label(__('anti-scam::anti-scam.request_path'))
                     ->limit(30)
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('user.name')
+                TextColumn::make('user.name')
                     ->label(__('anti-scam::anti-scam.blocked_by'))
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label(__('anti-scam::anti-scam.created_at'))
                     ->dateTime('Y-m-d H:i')
                     ->sortable(),
             ])
             ->filters([])
             ->actions([
-                Tables\Actions\ViewAction::make()
+                ViewAction::make(),
+                DeleteAction::make()
             ])
             ->bulkActions([
-
+                DeleteBulkAction::make()
             ]);
     }
     public static function infolist(Infolist $infolist): Infolist
@@ -182,7 +191,7 @@ class BlockedIpLogResource extends Resource
                     TextEntry::make('blocked_by.name')
                         ->label(__('anti-scam::anti-scam.blocked_by'))
                         ->columnSpanFull(),
-                ]),
+                ])->columnSpanFull(),
 
         ]);
     }

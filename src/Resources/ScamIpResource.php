@@ -5,7 +5,10 @@ namespace Attargah\AntiScam\Resources;
 use Attargah\AntiScam\Models\ScamIp;
 
 use Attargah\AntiScam\Resources\ScamIpResource\Pages\ManageScamIp;
+use Filament\Actions\DeleteAction;
 use Filament\Forms;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -54,28 +57,29 @@ class ScamIpResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('ip_address')
+                TextInput::make('ip_address')
                     ->label(__('anti-scam::anti-scam.ip_address'))
                     ->required()
+                    ->disabled('edit')
                     ->maxLength(45),
 
-                Forms\Components\TextInput::make('form_identity')
+                TextInput::make('form_identity')
                     ->label(__('anti-scam::anti-scam.form_identity'))
                     ->maxLength(255),
 
-                Forms\Components\Textarea::make('user_agent')
+                 Textarea::make('user_agent')
                     ->label(__('anti-scam::anti-scam.user_agent'))
                     ->rows(2),
 
-                Forms\Components\TextInput::make('request_url')
+                 TextInput::make('request_url')
                     ->label(__('anti-scam::anti-scam.request_url'))
                     ->maxLength(200),
 
-                Forms\Components\TextInput::make('request_path')
+                 TextInput::make('request_path')
                     ->label(__('anti-scam::anti-scam.request_path'))
                     ->maxLength(100),
 
-                Forms\Components\TextInput::make('request_method')
+                TextInput::make('request_method')
                     ->label(__('anti-scam::anti-scam.request_method'))
                     ->maxLength(20),
             ]);
@@ -116,10 +120,11 @@ class ScamIpResource extends Resource
             ])
             ->filters([])
             ->actions([
-                Tables\Actions\ViewAction::make()
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-
+                Tables\Actions\DeleteBulkAction::make()
             ]);
     }
     public static function infolist(Infolist $infolist): Infolist
@@ -148,7 +153,7 @@ class ScamIpResource extends Resource
                     TextEntry::make('request_method')
                         ->label(__('anti-scam::anti-scam.request_method'))
                         ->columnSpanFull(),
-                ]),
+                ])->columnSpanFull(),
 
         ]);
     }

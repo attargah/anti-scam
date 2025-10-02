@@ -10,10 +10,4 @@ class ManageScamIp extends ManageRecords
 {
     protected static string $resource = ScamIpResource::class;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\CreateAction::make(),
-        ];
-    }
 }

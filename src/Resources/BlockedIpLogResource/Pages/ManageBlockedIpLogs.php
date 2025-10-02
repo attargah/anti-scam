@@ -10,10 +10,4 @@ class ManageBlockedIpLogs extends ManageRecords
 {
     protected static string $resource = BlockedIpLogResource::class;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\CreateAction::make(),
-        ];
-    }
 }
