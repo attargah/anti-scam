@@ -29,6 +29,7 @@ return [
     'blocked_by' => 'Blocked By',
     'created_at' => 'Created At',
     'manual_add_reason'=>'Manual add from Filament Resource',
+    'edit_reason'=>'Edited from Filament Resource',
     'form_identity_not_found' => 'Form Identity Not Found',
     'scam_reason' => 'Scam Request',
     'max_request_exceeded' => 'Max Request (:count) count is exceeded',

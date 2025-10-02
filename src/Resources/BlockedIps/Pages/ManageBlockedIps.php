@@ -1,20 +1,19 @@
 <?php
 
-namespace Attargah\AntiScam\Resources\BlockedIpResource\Pages;
+namespace Attargah\AntiScam\Resources\BlockedIps\Pages;
 
 
-use Attargah\AntiScam\Resources\BlockedIpResource;
-use Filament\Actions;
+use Attargah\AntiScam\Resources\BlockedIps\BlockedIpResource;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRecords;
 
 class ManageBlockedIps extends ManageRecords
 {
     protected static string $resource = BlockedIpResource::class;
-
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->after(function ($record) {
+            CreateAction::make()->after(function ($record) {
                 $record->logs()->create([
                     'ip_address'     => $record->ip_address,
                     'expires_at'     => $record->expires_at,
@@ -29,7 +28,5 @@ class ManageBlockedIps extends ManageRecords
             })
         ];
     }
-
-
 
 }
